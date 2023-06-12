@@ -1,12 +1,31 @@
 const express=require('express');
 const app=express();
+const jwt = require('jsonwebtoken');
 const cors=require('cors');
 require('dotenv').config()
 
 const port=process.env.PORT ||5000;
 
+// middle ware
 app.use(cors());
 app.use(express.json());
+
+// jwt verify
+
+const verifyjwt=(req,res,next)=>{
+ const authorization=req.headers.authorization;
+ if(!authorization){
+  return res.status(401).send({Error:true, message:'unathorize'})
+ }
+ const token=authorization.split(' ')[1];
+ jwt.verify(token.process.env.ACCESS_TOKEN_SECRET,(err,decoded)=>{
+  if(err){
+    return res.status(401).send({Error:true, message:'unathorize'})
+  }
+  req.decoded=decoded;
+  next();
+ })
+}
 
 
 
@@ -27,7 +46,15 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    const userCollection=client.db('ultrasport').collection('users')
+    const userCollection=client.db('ultrasport').collection('users');
+
+
+    // JWT TOKEN
+    app.post('/jwt',(req,res)=>{
+      const user=req.body;
+      const token=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{ expiresIn:'1h'})
+      res.send({token})
+    })
 
     // user api
     app.post('/users',async(req,res)=>{
@@ -41,7 +68,11 @@ async function run() {
         res.send(result)
     })
 
-    
+    // admin chek
+    app.get('/users/admin/:email',async(req,res)=>{
+      const email=req.params.email;
+      const
+    })
 
 // user get
 
