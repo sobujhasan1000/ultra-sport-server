@@ -69,11 +69,20 @@ async function run() {
     })
 
     // admin chek
-    app.get('/users/admin/:email',verifyjwt,async(req,res)=>{
+    app.get('/users/admin/:email',async(req,res)=>{
       const email=req.params.email;
       const query={email:email}
       const user=await userCollection.findOne(query);
       const result={admin:user?.role==='admin'}
+      res.send(result)
+    })
+
+    // instructor chek
+    app.get('/users/instructor/:email',async(req,res)=>{
+      const email=req.params.email;
+      const query={email:email}
+      const user=await userCollection.findOne(query);
+      const result={instructor:user?.role==='instructor'}
       res.send(result)
     })
 
