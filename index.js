@@ -69,9 +69,12 @@ async function run() {
     })
 
     // admin chek
-    app.get('/users/admin/:email',async(req,res)=>{
+    app.get('/users/admin/:email',verifyjwt,async(req,res)=>{
       const email=req.params.email;
-      const
+      const query={email:email}
+      const user=await userCollection.findOne(query);
+      const result={admin:user?.role==='admin'}
+      res.send(result)
     })
 
 // user get
