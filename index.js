@@ -69,12 +69,19 @@ async function run() {
     })
 
     // class post api
-    
+
          app.post('/classes',async(req,res)=>{
           const classes=req.body;
           const result= await classesCollection.insertOne(classes);
           res.send(result)
          })
+
+        //  class get post
+
+        app.get('/classes',async(req,res)=>{
+          const result=await classesCollection.find().toArray();
+          res.send(result)
+        })
 
     // admin chek
     app.get('/users/admin/:email',async(req,res)=>{
