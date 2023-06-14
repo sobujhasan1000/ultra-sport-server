@@ -94,6 +94,17 @@ async function run() {
           res.send(result)
         })
 
+        // class deney
+        app.patch('/classes/denied/:id',async (req,res)=>{
+          const id=req.params.id;
+          const filter={_id: new ObjectId(id)};
+          const upDatedoc={
+            $set:{status:'denied'}
+          }
+          const result=await classesCollection.updateOne(filter,upDatedoc)
+          res.send(result)
+        })
+
     // admin chek
     app.get('/users/admin/:email',async(req,res)=>{
       const email=req.params.email;
