@@ -47,7 +47,7 @@ async function run() {
     await client.connect();
 
     const userCollection=client.db('ultrasport').collection('users');
-
+    const classesCollection=client.db('ultrasport').collection('classes')
 
     // JWT TOKEN
     app.post('/jwt',(req,res)=>{
@@ -67,6 +67,14 @@ async function run() {
         const result=await userCollection.insertOne(user);
         res.send(result)
     })
+
+    // class post api
+    
+         app.post('/classes',async(req,res)=>{
+          const classes=req.body;
+          const result= await classesCollection.insertOne(classes);
+          res.send(result)
+         })
 
     // admin chek
     app.get('/users/admin/:email',async(req,res)=>{
