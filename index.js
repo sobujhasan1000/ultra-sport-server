@@ -83,6 +83,8 @@ async function run() {
           res.send(result)
         })
 
+        
+
         // class status api
         app.patch('/classes/approve/:id',async (req,res)=>{
           const id=req.params.id;
@@ -150,6 +152,14 @@ async function run() {
     }
     const result= await userCollection.updateOne(filter,upDatedoc);
     res.send(result)
+  })
+
+  // instractor find
+
+  app.get('/users/instructor', async(req,res)=>{
+    const user= await userCollection.find({ role: 'instructor' }).toArray();
+     res.send(user)
+    //  console.log(result)
   })
 
 
