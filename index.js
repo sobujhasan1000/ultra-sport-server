@@ -83,6 +83,17 @@ async function run() {
           res.send(result)
         })
 
+        // class status api
+        app.patch('/classes/approve/:id',async (req,res)=>{
+          const id=req.params.id;
+          const filter={_id: new ObjectId(id)};
+          const upDatedoc={
+            $set:{status:'approved'}
+          }
+          const result=await classesCollection.updateOne(filter,upDatedoc)
+          res.send(result)
+        })
+
     // admin chek
     app.get('/users/admin/:email',async(req,res)=>{
       const email=req.params.email;
