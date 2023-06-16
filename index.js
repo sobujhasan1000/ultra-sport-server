@@ -170,6 +170,19 @@ async function run() {
   })
 
 
+  // chat gpt==================
+
+  app.get('/users/posted', async (req, res) => {
+    try {
+      const { email } = req.query;
+      const posted = await classesCollection.find({ "Inemail": email }).toArray();
+      res.send(posted);
+    } catch (error) {
+      res.status(500).send('Internal Server Error');
+    }
+  });
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
