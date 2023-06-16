@@ -89,19 +89,23 @@ async function run() {
 
         // ================user selected class get ====================
         app.get('/selectedClass', async(req,res)=>{
-       try{
+       
           const { email }=req.query;
           const selectedClass=await courseSelectCollection.find({"email": email}).toArray();
           res.send(selectedClass)
-        }
-          catch (error) {
-            res.status(500).send('Internal Server Error');
-          }
-        })
       
-        
+        })
 
-        //  ==================== all class get post===================
+        // ==================== selected class delete ========================
+      
+        app.delete('/selectedClass/:id',async (req,res)=>{
+          const id=req.params.id;
+          const query={ _id: new ObjectId(id) };
+           const result= await courseSelectCollection.deleteOne(query);
+           res.send(result)
+        })
+
+        //  ==================== all class get post===========================
 
         app.get('/classes',async(req,res)=>{
           const result=await classesCollection.find().toArray();
