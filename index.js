@@ -44,7 +44,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+     client.connect();
 
     const userCollection=client.db('ultrasport').collection('users');
     const classesCollection=client.db('ultrasport').collection('classes')
@@ -170,7 +170,7 @@ async function run() {
   })
 
 
-  // chat gpt==================
+  // my class get==================
 
   app.get('/users/posted', async (req, res) => {
     try {
