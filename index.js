@@ -50,14 +50,16 @@ async function run() {
     const classesCollection=client.db('ultrasport').collection('classes');
     const courseSelectCollection=client.db('ultrasport').collection('courseSelect');
 
-    // JWT TOKEN
+    // =========================== JWT TOKEN ========================
+
     app.post('/jwt',(req,res)=>{
       const user=req.body;
       const token=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{ expiresIn:'1h'})
       res.send({token})
     })
 
-    // user api
+    // ================== user insert =========================
+
     app.post('/users',async(req,res)=>{
         const user=req.body;
         const query={email:user.email}
@@ -69,7 +71,7 @@ async function run() {
         res.send(result)
     })
 
-    // class post api
+    // ==================class post api====================
 
          app.post('/classes',async(req,res)=>{
           const classes=req.body;
@@ -77,14 +79,29 @@ async function run() {
           res.send(result)
          })
 
-        //  select course api create
+        // ===================== select course api create================
+
         app.post('/courseSelect', async(req,res)=>{
           const selectCourse=req.body;
           const result=await courseSelectCollection.insertOne(selectCourse);
           res.send(result)
         })
 
-        //  class get post
+        // ================user selected class get ====================
+        app.get('/selectedClass', async(req,res)=>{
+       try{
+          const { email }=req.query;
+          const selectedClass=await courseSelectCollection.find({"email": email}).toArray();
+          res.send(selectedClass)
+        }
+          catch (error) {
+            res.status(500).send('Internal Server Error');
+          }
+        })
+      
+        
+
+        //  ==================== all class get post===================
 
         app.get('/classes',async(req,res)=>{
           const result=await classesCollection.find().toArray();
@@ -93,7 +110,8 @@ async function run() {
 
         
 
-        // class status api
+        // ===================== class status api ===========================
+
         app.patch('/classes/approve/:id',async (req,res)=>{
           const id=req.params.id;
           const filter={_id: new ObjectId(id)};
@@ -104,7 +122,7 @@ async function run() {
           res.send(result)
         })
 
-        // class deney
+        // ========================== class deney ===================================
         app.patch('/classes/denied/:id',async (req,res)=>{
           const id=req.params.id;
           const filter={_id: new ObjectId(id)};
@@ -115,7 +133,7 @@ async function run() {
           res.send(result)
         })
 
-    // admin chek
+    // ========================= admin chek =====================================
     app.get('/users/admin/:email',async(req,res)=>{
       const email=req.params.email;
       const query={email:email}
@@ -124,7 +142,7 @@ async function run() {
       res.send(result)
     })
 
-    // instructor chek
+    // =============== instructor chek ============================
     app.get('/users/instructor/:email',async(req,res)=>{
       const email=req.params.email;
       const query={email:email}
@@ -133,14 +151,14 @@ async function run() {
       res.send(result)
     })
 
-// user get
+// ========================= user get  ==================================
 
    app.get('/users',async(req,res)=>{
       const result=await userCollection.find().toArray();
       res.send(result);
    })
 
-   // user role create
+   // ======================= admin role create ========================
 
    app.patch('/users/admin/:id',async(req,res)=>{
     const id=req.params.id;
@@ -152,6 +170,8 @@ async function run() {
     res.send(result)
   })
 
+  //  ==================  instratur create  =========================
+
    app.patch('/users/instructor/:id',async(req,res)=>{
     const id=req.params.id;
     const filter={_id: new ObjectId(id)};
@@ -162,15 +182,16 @@ async function run() {
     res.send(result)
   })
 
-  // instractor find
+
+  // ================ instractor find ======================
 
   app.get('/users/instructor', async(req,res)=>{
     const user= await userCollection.find({ role: 'instructor' }).toArray();
      res.send(user)
-    //  console.log(result)
   })
 
-  // approved classes find
+  // ==================== approved classes find ==================================
+
   app.get('/classes/approved', async(req,res)=>{
     const approvedCalss= await classesCollection.find({ status: 'approved' }).toArray();
      res.send(approvedCalss)
@@ -178,7 +199,7 @@ async function run() {
   })
 
 
-  // my class get==================
+  // ======================= user posted class  get  ==================
 
   app.get('/users/posted', async (req, res) => {
     try {
