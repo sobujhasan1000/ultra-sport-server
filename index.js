@@ -47,7 +47,8 @@ async function run() {
      client.connect();
 
     const userCollection=client.db('ultrasport').collection('users');
-    const classesCollection=client.db('ultrasport').collection('classes')
+    const classesCollection=client.db('ultrasport').collection('classes');
+    const courseSelectCollection=client.db('ultrasport').collection('courseSelect');
 
     // JWT TOKEN
     app.post('/jwt',(req,res)=>{
@@ -75,6 +76,13 @@ async function run() {
           const result= await classesCollection.insertOne(classes);
           res.send(result)
          })
+
+        //  select course api create
+        app.post('/courseSelect', async(req,res)=>{
+          const selectCourse=req.body;
+          const result=await courseSelectCollection.insertOne(selectCourse);
+          res.send(result)
+        })
 
         //  class get post
 
